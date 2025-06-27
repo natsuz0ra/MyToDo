@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:MyToDo.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -122,6 +123,8 @@
                         Width="35"
                         Height="35"
                         VerticalAlignment="Top"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="AddToDo"
                         Cursor="Hand"
                         DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignFloatingActionSecondaryLightButton}">
@@ -133,13 +136,21 @@
                 </DockPanel>
 
                 <ListBox
+                    x:Name="todoList"
                     HorizontalContentAlignment="Stretch"
                     ItemsSource="{Binding ToDoDtos}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding AddToDoCommand}" CommandParameter="{Binding ElementName=todoList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <DockPanel MaxHeight="80" LastChildFill="False">
-                                <ToggleButton DockPanel.Dock="Right" Style="{StaticResource MaterialDesignSwitchSecondaryToggleButton}" />
+                                <ToggleButton DockPanel.Dock="Right" Style="{StaticResource MaterialDesignSwitchSecondaryToggleButton}" Command="{Binding ToDoCompletedCommand}"/>
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="16"
@@ -178,6 +189,8 @@
                         Width="35"
                         Height="35"
                         VerticalAlignment="Top"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="AddMemo"
                         Cursor="Hand"
                         DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignFloatingActionSecondaryLightButton}">
@@ -188,7 +201,17 @@
                     </Button>
                 </DockPanel>
 
-                <ListBox ItemsSource="{Binding MemoDtos}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox
+                    x:Name="memoList"
+                    ItemsSource="{Binding MemoDtos}"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding AddMemoCommand}" CommandParameter="{Binding ElementName=memoList, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel MaxHeight="80">

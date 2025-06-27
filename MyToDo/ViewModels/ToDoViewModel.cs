@@ -1,7 +1,10 @@
 ﻿using Microsoft.Win32;
+using MyToDo.Common;
+using MyToDo.Extensions;
 using MyToDo.Service;
 using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
+using Prism.Ioc;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -15,6 +18,8 @@ namespace MyToDo.ViewModels
     public class ToDoViewModel : NavigationViewModel
     {
         private readonly IToDoService service;
+        private readonly IDialogHostService dialogHostService;
+
         public DelegateCommand<string> ExecuteCommand { get; private set; }
         public DelegateCommand<ToDoDto> SelectedCommand { get; private set; }
         public DelegateCommand<ToDoDto> DeleteCommand { get; private set; }
@@ -80,6 +85,7 @@ namespace MyToDo.ViewModels
             DeleteCommand = new DelegateCommand<ToDoDto>(Delete);
 
             this.service = service;
+            this.dialogHostService = containerProvider.Resolve<IDialogHostService>();
             this.toDoDtos = new ObservableCollection<ToDoDto>();
         }
 
@@ -147,6 +153,10 @@ namespace MyToDo.ViewModels
         /// </summary>
         private async void Delete(ToDoDto obj)
         {
+            var result = await dialogHostService.Question("温馨提示", $"确认删除待办事项：{obj.Title}？");
+            if (result.Result != ButtonResult.OK)
+                return;
+
             UpdateLoading(true);
             try
             {

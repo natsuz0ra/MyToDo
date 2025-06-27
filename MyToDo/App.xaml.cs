@@ -7,6 +7,7 @@ using System.Data;
 using System.Windows;
 using DryIoc;
 using MyToDo.Common;
+using MyToDo.Views.Dialog;
 
 namespace MyToDo
 {
@@ -29,12 +30,18 @@ namespace MyToDo
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
 
+            containerRegistry.Register<IDialogHostService, DialogHostService>();
+
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();
             containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>();
             containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>();
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();
+
+            containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
+            containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
+            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
         }
 
         protected override void OnInitialized()

@@ -1,4 +1,5 @@
-﻿using MyToDo.Extensions;
+﻿using MyToDo.Common;
+using MyToDo.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MyToDo.Views
     /// </summary>
     public partial class MainView : Window
     {
-        public MainView(IEventAggregator aggregator)
+        public MainView(IEventAggregator aggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
 
@@ -46,7 +47,14 @@ namespace MyToDo.Views
                     this.WindowState = WindowState.Maximized;
                 }
             };
-            btnClose.Click += (s, e) => { this.Close(); };
+            btnClose.Click += async (s, e) =>
+            {
+                var result = await dialogHostService.Question("温馨提示", "确认退出系统？");
+                if (result.Result != ButtonResult.OK)
+                    return;
+
+                this.Close();
+            };
 
             ColorZone.MouseMove += (s, e) =>
             {

@@ -1,4 +1,5 @@
-﻿using MyToDo.Common.Events;
+﻿using MyToDo.Common;
+using MyToDo.Common.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,24 @@ namespace MyToDo.Extensions
         public static void RegisterUploading(this IEventAggregator aggregator, Action<UpdateModel> action)
         {
             aggregator.GetEvent<UpdateLoadingEvent>().Subscribe(action);
+        }
+
+        /// <summary>
+        /// 询问窗口
+        /// </summary>
+        /// <param name="dialogHost">指定的dialogHost会话主机</param>
+        /// <param name="title">标题</param>
+        /// <param name="content">询问内容</param>
+        /// <param name="dialogHostName">会话主机名称</param>
+        /// <returns></returns>
+        public static async Task<IDialogResult> Question(this IDialogHostService dialogHost, string title, string content, string dialogHostName = "Root")
+        {
+            DialogParameters dialogParameters = new DialogParameters();
+            dialogParameters.Add("title", title);
+            dialogParameters.Add("content", content);
+            dialogParameters.Add("dialogHostName", dialogHostName);
+
+            return await dialogHost.ShowDialog("MsgView", dialogParameters, dialogHostName);
         }
     }
 }
