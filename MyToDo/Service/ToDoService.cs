@@ -28,5 +28,14 @@ namespace MyToDo.Service
 
             return await client.ExecuteAsync<PagedList<ToDoDto>>(request);
         }
+
+        public async Task<ApiResponse<SummaryDto>> SummaryAsync()
+        {
+            BaseRequest request = new BaseRequest();
+            request.Method = Method.Get;
+            request.Route = $"api/{base.serviceName}/Summary";
+
+            return await client.ExecuteAsync<SummaryDto>(request);
+        }
     }
 }
