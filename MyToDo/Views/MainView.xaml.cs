@@ -26,12 +26,21 @@ namespace MyToDo.Views
             InitializeComponent();
 
             // 注册等待消息窗口
-            aggregator.RegisterUploading(arg =>
+            aggregator.RegisterUpdateLoading(arg =>
             {
                 MainDialogHost.IsOpen = arg.IsOpen;
                 if (MainDialogHost.IsOpen)
                 {
                     MainDialogHost.DialogContent = new ProgressView();
+                }
+            });
+
+            // 注册提示消息
+            aggregator.RegisterMessage(arg =>
+            {
+                if (Snackbar?.MessageQueue != null)
+                {
+                    Snackbar.MessageQueue.Enqueue(arg);
                 }
             });
 

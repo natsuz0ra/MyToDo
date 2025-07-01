@@ -11,26 +11,6 @@ namespace MyToDo.Extensions
     public static class DialogExtensions
     {
         /// <summary>
-        /// 推送等待消息
-        /// </summary>
-        /// <param name="aggregator"></param>
-        /// <param name="model"></param>
-        public static void UpdateLoading(this IEventAggregator aggregator, UpdateModel model)
-        {
-            aggregator.GetEvent<UpdateLoadingEvent>().Publish(model);
-        }
-
-        /// <summary>
-        /// 注册等待消息
-        /// </summary>
-        /// <param name="aggregator"></param>
-        /// <param name="action"></param>
-        public static void RegisterUploading(this IEventAggregator aggregator, Action<UpdateModel> action)
-        {
-            aggregator.GetEvent<UpdateLoadingEvent>().Subscribe(action);
-        }
-
-        /// <summary>
         /// 询问窗口
         /// </summary>
         /// <param name="dialogHost">指定的dialogHost会话主机</param>
@@ -46,6 +26,46 @@ namespace MyToDo.Extensions
             dialogParameters.Add("dialogHostName", dialogHostName);
 
             return await dialogHost.ShowDialog("MsgView", dialogParameters, dialogHostName);
+        }
+
+        /// <summary>
+        /// 推送等待消息
+        /// </summary>
+        /// <param name="aggregator"></param>
+        /// <param name="model"></param>
+        public static void UpdateLoading(this IEventAggregator aggregator, UpdateModel model)
+        {
+            aggregator.GetEvent<UpdateLoadingEvent>().Publish(model);
+        }
+
+        /// <summary>
+        /// 注册等待消息
+        /// </summary>
+        /// <param name="aggregator"></param>
+        /// <param name="action"></param>
+        public static void RegisterUpdateLoading(this IEventAggregator aggregator, Action<UpdateModel> action)
+        {
+            aggregator.GetEvent<UpdateLoadingEvent>().Subscribe(action);
+        }
+
+        /// <summary>
+        /// 推送消息事件
+        /// </summary>
+        /// <param name="aggregator"></param>
+        /// <param name="message"></param>
+        public static void SendMessage(this IEventAggregator aggregator, string message)
+        {
+            aggregator.GetEvent<MessageEvent>().Publish(message);
+        }
+
+        /// <summary>
+        /// 注册消息事件
+        /// </summary>
+        /// <param name="aggregator"></param>
+        /// <param name="action"></param>
+        public static void RegisterMessage(this IEventAggregator aggregator, Action<string> action)
+        {
+            aggregator.GetEvent<MessageEvent>().Subscribe(action);
         }
     }
 }
