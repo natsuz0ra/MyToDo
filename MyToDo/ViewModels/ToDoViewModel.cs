@@ -77,7 +77,6 @@ namespace MyToDo.ViewModels
             set { selectedIndex = value; RaisePropertyChanged(); }
         }
 
-
         public ToDoViewModel(IContainerProvider containerProvider, IToDoService service) : base(containerProvider)
         {
             ExecuteCommand = new DelegateCommand<string>(Execute);
@@ -241,6 +240,13 @@ namespace MyToDo.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
+
+            var param = navigationContext.Parameters;
+            if (param.ContainsKey("selectedStatus"))
+                SelectedIndex = param.GetValue<int>("selectedStatus");
+            else
+                SelectedIndex = 0;
+
             GetDataAsync();
         }
     }

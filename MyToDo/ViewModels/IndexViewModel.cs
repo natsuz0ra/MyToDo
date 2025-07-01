@@ -1,5 +1,6 @@
 ﻿using MyToDo.Common;
 using MyToDo.Common.Models;
+using MyToDo.Extensions;
 using MyToDo.Service;
 using MyToDo.Shared.Dtos;
 using MyToDo.Shared.Parameters;
@@ -19,11 +20,14 @@ namespace MyToDo.ViewModels
         private readonly IToDoService toDoService;
         private readonly IMemoService memoService;
         private readonly IDialogHostService dialogService;
+        private readonly IRegionManager regionManager;
+        private readonly IEventAggregator aggregator;
 
         public DelegateCommand<string> ExecuteCommand { get; private set; }
         public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
         public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
         public DelegateCommand<ToDoDto> ToDoCompletedCommand { get; private set; }
+        public DelegateCommand<TaskBar> NavigateCommand { get; private set; }
 
         #endregion
 
@@ -45,19 +49,33 @@ namespace MyToDo.ViewModels
             set { summary = value; RaisePropertyChanged(); }
         }
 
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; RaisePropertyChanged(); }
+        }
+
+
         #endregion
 
         public IndexViewModel(IContainerProvider containerProvider, IDialogHostService dialogService) : base(containerProvider)
         {
             CreateTaskBars();
 
+            Title = $"你好，natsuzora！今天是 {DateTime.Now.GetDateTimeFormats('D')[1]}";
+
             ExecuteCommand = new DelegateCommand<string>(Execute);
             EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
             EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
             ToDoCompletedCommand = new DelegateCommand<ToDoDto>(Completed);
+            NavigateCommand = new DelegateCommand<TaskBar>(Navigate);
 
             this.toDoService = containerProvider.Resolve<IToDoService>();
             this.memoService = containerProvider.Resolve<IMemoService>();
+            this.regionManager = containerProvider.Resolve<IRegionManager>();
+            this.aggregator = containerProvider.Resolve<IEventAggregator>();
             this.dialogService = dialogService;
         }
 
@@ -69,10 +87,10 @@ namespace MyToDo.ViewModels
         private void CreateTaskBars()
         {
             TaskBars = new ObservableCollection<TaskBar>();
-            TaskBars.Add(new TaskBar() { Icon = "ClockFast", Title = "汇总", Content = "-", Color = "#FF0CA0FF", Target = "" });
-            TaskBars.Add(new TaskBar() { Icon = "ClockCheckOutline", Title = "已完成", Content = "-", Color = "#FF1ECA3A", Target = "" });
+            TaskBars.Add(new TaskBar() { Icon = "ClockFast", Title = "汇总", Content = "-", Color = "#FF0CA0FF", Target = "ToDoView" });
+            TaskBars.Add(new TaskBar() { Icon = "ClockCheckOutline", Title = "已完成", Content = "-", Color = "#FF1ECA3A", Target = "ToDoView" });
             TaskBars.Add(new TaskBar() { Icon = "ChartLineVariant", Title = "完成比例", Content = "-", Color = "#FF02C6DC", Target = "" });
-            TaskBars.Add(new TaskBar() { Icon = "PlaylistStar", Title = "备忘录", Content = "-", Color = "#FFFFA000", Target = "" });
+            TaskBars.Add(new TaskBar() { Icon = "PlaylistStar", Title = "备忘录", Content = "-", Color = "#FFFFA000", Target = "MemoView" });
         }
 
         /// <summary>
@@ -184,8 +202,22 @@ namespace MyToDo.ViewModels
             finally
             {
                 UpdateLoading(false);
+                aggregator.SendMessage("已完成");
                 RefreshData();
             }
+        }
+
+        void Navigate(TaskBar taskBar)
+        {
+            if (taskBar.Target == null) return;
+
+            NavigationParameters param = new NavigationParameters();
+
+            if (taskBar.Title == "已完成")
+            {
+                param.Add("selectedStatus", 2);
+            }
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(taskBar.Target, param);
         }
 
         #endregion
