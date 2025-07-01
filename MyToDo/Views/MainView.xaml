@@ -6,8 +6,8 @@
     xmlns:ext="clr-namespace:MyToDo.Extensions"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:MyToDo"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     Title="MyToDo"
     Width="1280"
@@ -25,13 +25,13 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
-    <materialDesign:DialogHost
+    <md:DialogHost
         x:Name="MainDialogHost"
         DialogTheme="Inherit"
         Identifier="Root">
 
-        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-            <materialDesign:DrawerHost.LeftDrawerContent>
+        <md:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <md:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="220">
                     <StackPanel>
                         <Image
@@ -65,7 +65,7 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
+                                        <md:PackIcon
                                             Width="20"
                                             Height="20"
                                             Margin="20,0"
@@ -82,7 +82,7 @@
                         </ListBox>
                     </StackPanel>
                 </DockPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>
+            </md:DrawerHost.LeftDrawerContent>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -90,15 +90,15 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <materialDesign:Snackbar
+                <md:Snackbar
                     x:Name="Snackbar"
                     Panel.ZIndex="1"
-                    MessageQueue="{materialDesign:MessageQueue}" />
+                    MessageQueue="{md:MessageQueue}" />
 
-                <materialDesign:ColorZone
+                <md:ColorZone
                     x:Name="ColorZone"
                     Padding="16"
-                    materialDesign:ElevationAssist.Elevation="Dp8"
+                    md:ElevationAssist.Elevation="Dp8"
                     DockPanel.Dock="Top"
                     Mode="PrimaryMid">
                     <DockPanel LastChildFill="True">
@@ -139,20 +139,20 @@
 
                             <Button
                                 Margin="24,0,0,0"
-                                materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static materialDesign:BrushRoundConverter.Instance}}"
+                                md:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static md:BrushRoundConverter.Instance}}"
                                 Command="{Binding GoBackCommand}"
-                                Content="{materialDesign:PackIcon Kind=ArrowLeft,
-                                                                  Size=24}"
+                                Content="{md:PackIcon Kind=ArrowLeft,
+                                                      Size=24}"
                                 Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                 Style="{DynamicResource MaterialDesignToolButton}"
                                 ToolTip="Previous Item" />
 
                             <Button
                                 Margin="16,0,0,0"
-                                materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static materialDesign:BrushRoundConverter.Instance}}"
+                                md:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static md:BrushRoundConverter.Instance}}"
                                 Command="{Binding GoForwardCommand}"
-                                Content="{materialDesign:PackIcon Kind=ArrowRight,
-                                                                  Size=24}"
+                                Content="{md:PackIcon Kind=ArrowRight,
+                                                      Size=24}"
                                 Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                 Style="{DynamicResource MaterialDesignToolButton}"
                                 ToolTip="Next Item" />
@@ -166,9 +166,9 @@
                                 Text="笔记本" />
                         </StackPanel>
                     </DockPanel>
-                </materialDesign:ColorZone>
+                </md:ColorZone>
                 <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
             </Grid>
-        </materialDesign:DrawerHost>
-    </materialDesign:DialogHost>
+        </md:DrawerHost>
+    </md:DialogHost>
 </Window>

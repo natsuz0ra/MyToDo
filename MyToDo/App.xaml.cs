@@ -8,6 +8,7 @@ using System.Windows;
 using DryIoc;
 using MyToDo.Common;
 using MyToDo.Views.Dialog;
+using MyToDo.ViewModels.Dialogs;
 
 namespace MyToDo
 {
@@ -39,6 +40,8 @@ namespace MyToDo
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>();
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();
 
+            containerRegistry.RegisterDialog<LoginView, LoginViewModel>();
+
             containerRegistry.RegisterForNavigation<AddToDoView, AddToDoViewModel>();
             containerRegistry.RegisterForNavigation<AddMemoView, AddMemoViewModel>();
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();
@@ -46,10 +49,20 @@ namespace MyToDo
 
         protected override void OnInitialized()
         {
-            var service = App.Current.MainWindow.DataContext as IConfigureService;
-            if (service != null)
-                service.Configure();
-            base.OnInitialized();
+            var dialogService = Container.Resolve<IDialogService>();
+            dialogService.ShowDialog("LoginView", callback =>
+            {
+                if (callback != null && callback.Result != ButtonResult.OK)
+                {
+                    App.Current.Shutdown();
+                    return;
+                }
+
+                var service = App.Current.MainWindow.DataContext as IConfigureService;
+                if (service != null)
+                    service.Configure();
+                base.OnInitialized();
+            });
         }
     }
 
