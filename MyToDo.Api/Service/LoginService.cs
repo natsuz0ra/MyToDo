@@ -2,6 +2,7 @@
 using MyToDo.Api.Context;
 using MyToDo.Shared;
 using MyToDo.Shared.Dtos;
+using MyToDo.Shared.Extensions;
 
 namespace MyToDo.Api.Service
 {
@@ -21,11 +22,14 @@ namespace MyToDo.Api.Service
             var repo = unitOfWork.GetRepository<User>();
             try
             {
+                password = password.GetMD5();
+
                 var user = await repo.GetFirstOrDefaultAsync(predicate:
                     t => (t.Account.Equals(account)) && (t.Password.Equals(password)));
 
                 if (user == null)
                     return new ApiResponse("账号或密码错误，请重试");
+
                 user.Password = "";
                 return new ApiResponse(true, user);
             }
@@ -46,6 +50,7 @@ namespace MyToDo.Api.Service
                 if (check != null)
                     return new ApiResponse($"当前帐号{user.Account}已存在，请重新注册");
 
+                user.Password = model.Password.GetMD5();
                 user.CreateTime = DateTime.Now;
                 user.UpdateTime = DateTime.Now;
 
