@@ -23,36 +23,12 @@ namespace MyToDo.ViewModels.Dialogs
         #endregion
 
         #region 属性
-        private string account;
+        private RegisterUserDto userDto;
 
-        public string Account
+        public RegisterUserDto UserDto
         {
-            get { return account; }
-            set { account = value; RaisePropertyChanged(); }
-        }
-
-        private string username;
-
-        public string Username
-        {
-            get { return username; }
-            set { username = value; RaisePropertyChanged(); }
-        }
-
-        private string password;
-
-        public string Password
-        {
-            get { return password; }
-            set { password = value; RaisePropertyChanged(); }
-        }
-
-        private string repectPassword;
-
-        public string RepectPassword
-        {
-            get { return repectPassword; }
-            set { repectPassword = value; RaisePropertyChanged(); }
+            get { return userDto; }
+            set { userDto = value; RaisePropertyChanged(); }
         }
 
         private int selectedIndex;
@@ -68,6 +44,7 @@ namespace MyToDo.ViewModels.Dialogs
         {
             ExecuteCommand = new DelegateCommand<string>(Execute);
             this.loginService = loginService;
+            this.UserDto = new RegisterUserDto();
             aggregator = containerProvider.Resolve<IEventAggregator>();
         }
 
@@ -75,19 +52,21 @@ namespace MyToDo.ViewModels.Dialogs
         {
             switch (arg)
             {
-                case "login":
+                case "login": // 登录
                     Login();
                     break;
-                case "loginOut":
+                case "loginOut": // 退出登录
                     LoginOut();
                     break;
-                case "goRegister":
+                case "goRegister": // 跳转注册页
                     SelectedIndex = 1;
+                    Clean();
                     break;
-                case "return":
+                case "return": // 返回登录页
                     SelectedIndex = 0;
+                    Clean();
                     break;
-                case "register":
+                case "register": // 注册
                     Register();
                     break;
                 default:
@@ -97,13 +76,13 @@ namespace MyToDo.ViewModels.Dialogs
 
         private async void Login()
         {
-            if (string.IsNullOrEmpty(Account) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(UserDto.Account) || string.IsNullOrEmpty(UserDto.Password))
                 return;
 
             var result = await loginService.LoginAsync(new UserDto()
             {
-                Account = this.Account,
-                Password = this.Password
+                Account = this.UserDto.Account,
+                Password = this.UserDto.Password,
             });
 
             if (!result.Status)
@@ -116,21 +95,22 @@ namespace MyToDo.ViewModels.Dialogs
 
         private async void Register()
         {
-            if (string.IsNullOrEmpty(Account) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepectPassword) || string.IsNullOrEmpty(Username))
+            if (string.IsNullOrEmpty(UserDto.Account) || string.IsNullOrEmpty(UserDto.Password) || string.IsNullOrEmpty(UserDto.NewPassword) || string.IsNullOrEmpty(UserDto.Username))
                 return;
 
-            if (!Password.Equals(RepectPassword))
+            if (!UserDto.Password.Equals(UserDto.NewPassword))
                 return;
 
             var result = await loginService.RegisterAsync(new UserDto()
             {
-                Account = this.Account,
-                UserName = this.Username,
-                Password = this.Password
+                Account = this.UserDto.Account,
+                UserName = this.UserDto.Username,
+                Password = this.UserDto.Password
             });
 
             if (!result.Status)
             {
+                Clean();
                 return;
             }
 
@@ -142,6 +122,14 @@ namespace MyToDo.ViewModels.Dialogs
             RequestClose.Invoke(new DialogResult(ButtonResult.No));
         }
 
+        private void Clean()
+        {
+            UserDto.Account = "";
+            UserDto.Username = "";
+            UserDto.Password = "";
+            UserDto.NewPassword = "";
+        }
+
         #region 接口方法
         public bool CanCloseDialog()
         {
@@ -150,7 +138,7 @@ namespace MyToDo.ViewModels.Dialogs
 
         public void OnDialogClosed()
         {
-            LoginOut();
+            //LoginOut();
         }
 
         public void OnDialogOpened(IDialogParameters parameters)

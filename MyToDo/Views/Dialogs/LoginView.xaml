@@ -45,11 +45,11 @@
                         Margin="0,10"
                         md:HintAssist.Hint="账号"
                         DockPanel.Dock="Top"
-                        Text="{Binding Account}" />
+                        Text="{Binding UserDto.Account}" />
                     <PasswordBox
                         Margin="0,10"
                         md:HintAssist.Hint="密码"
-                        pass:PasswordExtensions.Password="{Binding Password}"
+                        pass:PasswordExtensions.Password="{Binding UserDto.Password, Mode=TwoWay}"
                         DockPanel.Dock="Top">
                         <i:Interaction.Behaviors>
                             <pass:PasswordBehavior />
@@ -89,16 +89,16 @@
                         Margin="0,10"
                         md:HintAssist.Hint="账号"
                         DockPanel.Dock="Top"
-                        Text="{Binding Account}" />
+                        Text="{Binding UserDto.Account}" />
                     <TextBox
                         Margin="0,10"
                         md:HintAssist.Hint="用户名"
                         DockPanel.Dock="Top"
-                        Text="{Binding Username}" />
+                        Text="{Binding UserDto.Username}" />
                     <PasswordBox
                         Margin="0,10"
                         md:HintAssist.Hint="密码"
-                        pass:PasswordExtensions.Password="{Binding Password}"
+                        pass:PasswordExtensions.Password="{Binding UserDto.Password, Mode=TwoWay}"
                         DockPanel.Dock="Top">
                         <i:Interaction.Behaviors>
                             <pass:PasswordBehavior />
@@ -107,7 +107,7 @@
                     <PasswordBox
                         Margin="0,10"
                         md:HintAssist.Hint="重新输入密码"
-                        pass:PasswordExtensions.Password="{Binding Password}"
+                        pass:PasswordExtensions.Password="{Binding UserDto.NewPassword, Mode=TwoWay}"
                         DockPanel.Dock="Top">
                         <i:Interaction.Behaviors>
                             <pass:PasswordBehavior />

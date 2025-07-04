@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace MyToDo.Shared.Dtos
 {
-    public class UserDto : BaseDto
+    public class RegisterUserDto : BaseDto
     {
-        private string userName = "";
-        private string password = "";
-        private string account = "";
-        private string avatar = "";
-
-        public string UserName
-        {
-            get { return userName; }
-            set { userName = value; OnPropertyChanged(); }
-        }
+        private string account;
+        private string username;
+        private string password;
+        private string newPassword;
 
         public string Account
         {
             get { return account; }
             set { account = value; OnPropertyChanged(); }
+        }
+
+        public string Username
+        {
+            get { return username; }
+            set { username = value; OnPropertyChanged(); }
         }
 
         public string Password
@@ -31,10 +31,10 @@ namespace MyToDo.Shared.Dtos
             set { password = value; OnPropertyChanged(); }
         }
 
-        public string Avatar
+        public string NewPassword
         {
-            get { return avatar; }
-            set { avatar = value; OnPropertyChanged(); }
+            get { return newPassword; }
+            set { newPassword = value; OnPropertyChanged(); }
         }
     }
 }
