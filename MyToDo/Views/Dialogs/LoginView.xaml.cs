@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyToDo.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,18 @@ namespace MyToDo.Views.Dialog
     /// </summary>
     public partial class LoginView : UserControl
     {
-        public LoginView()
+        public LoginView(IEventAggregator aggregator)
         {
+            if (aggregator == null)
+                throw new ArgumentNullException(nameof(aggregator));
+
+            aggregator.RegisterMessage(e =>
+            {
+                if (LoginSnackbar?.MessageQueue != null)
+                {
+                    LoginSnackbar.MessageQueue.Enqueue(e.Message);
+                }
+            }, "Login");
             InitializeComponent();
         }
     }

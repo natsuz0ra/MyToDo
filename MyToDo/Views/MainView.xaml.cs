@@ -36,11 +36,11 @@ namespace MyToDo.Views
             });
 
             // 注册提示消息
-            aggregator.RegisterMessage(arg =>
+            aggregator.RegisterMessage(e =>
             {
                 if (Snackbar?.MessageQueue != null)
                 {
-                    Snackbar.MessageQueue.Enqueue(arg);
+                    Snackbar.MessageQueue.Enqueue(e.Message);
                 }
             });
 

@@ -77,7 +77,10 @@ namespace MyToDo.ViewModels.Dialogs
         private async void Login()
         {
             if (string.IsNullOrEmpty(UserDto.Account) || string.IsNullOrEmpty(UserDto.Password))
+            {
+                aggregator.SendMessage("账号或密码为空，请正确输入", "Login");
                 return;
+            }
 
             var result = await loginService.LoginAsync(new UserDto()
             {
@@ -87,19 +90,27 @@ namespace MyToDo.ViewModels.Dialogs
 
             if (!result.Status)
             {
+                aggregator.SendMessage(result.Message, "Login");
                 return;
             }
 
+            aggregator.SendMessage("登录成功", "Login");
             RequestClose.Invoke(new DialogResult(ButtonResult.OK));
         }
 
         private async void Register()
         {
             if (string.IsNullOrEmpty(UserDto.Account) || string.IsNullOrEmpty(UserDto.Password) || string.IsNullOrEmpty(UserDto.NewPassword) || string.IsNullOrEmpty(UserDto.Username))
+            {
+                aggregator.SendMessage("请正确填写信息", "Login");
                 return;
+            }
 
             if (!UserDto.Password.Equals(UserDto.NewPassword))
+            {
+                aggregator.SendMessage("两次的密码不正确，请检查", "Login");
                 return;
+            }
 
             var result = await loginService.RegisterAsync(new UserDto()
             {
@@ -110,10 +121,12 @@ namespace MyToDo.ViewModels.Dialogs
 
             if (!result.Status)
             {
+                aggregator.SendMessage(result.Message, "Login");
                 Clean();
                 return;
             }
 
+            aggregator.SendMessage("注册成功", "Login");
             SelectedIndex = 0;
         }
 

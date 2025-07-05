@@ -92,6 +92,7 @@
 
                 <md:Snackbar
                     x:Name="Snackbar"
+                    VerticalAlignment="Top"
                     Panel.ZIndex="1"
                     MessageQueue="{md:MessageQueue}" />
 
