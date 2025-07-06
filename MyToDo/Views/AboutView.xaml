@@ -14,7 +14,12 @@
                 Margin="0,0,0,20"
                 FontSize="30"
                 Text="关于作者" />
-            <TextBlock Margin="0,0,0,10" Text="Github：" />
+            <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+                <TextBlock Text="Github：" />
+                <TextBlock>
+                    <Hyperlink Click="GithubLink_Click" NavigateUri="https://github.com/natsuz0ra">github.com/natsuz0ra</Hyperlink>
+                </TextBlock>
+            </StackPanel>
             <TextBlock Text="博客：" />
         </StackPanel>
     </Grid>
