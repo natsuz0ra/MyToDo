@@ -65,8 +65,6 @@ namespace MyToDo.ViewModels
         {
             CreateTaskBars();
 
-            Title = $"你好，natsuzora！今天是 {DateTime.Now.GetDateTimeFormats('D')[1]}";
-
             ExecuteCommand = new DelegateCommand<string>(Execute);
             EditToDoCommand = new DelegateCommand<ToDoDto>(AddToDo);
             EditMemoCommand = new DelegateCommand<MemoDto>(AddMemo);
@@ -229,6 +227,7 @@ namespace MyToDo.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
+            Title = $"你好，{AppSession.User.UserName}！今天是 {DateTime.Now.GetDateTimeFormats('D')[1]}";
             RefreshData();
             base.OnNavigatedTo(navigationContext);
         }

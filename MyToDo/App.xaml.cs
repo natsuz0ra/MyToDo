@@ -65,6 +65,31 @@ namespace MyToDo
                 base.OnInitialized();
             });
         }
+
+        /// <summary>
+        /// 处理注销的页面逻辑
+        /// </summary>
+        public void LoginOut()
+        {
+            // 隐藏主窗口
+            Current.MainWindow.Hide();
+
+            // 弹出登录窗口
+            var dialogService = Container.Resolve<IDialogService>();
+            dialogService.ShowDialog("LoginView", callback =>
+            {
+                if (callback != null && callback.Result != ButtonResult.OK)
+                {
+                    Environment.Exit(0);
+                    return;
+                }
+
+                var service = App.Current.MainWindow.DataContext as IConfigureService;
+                if (service != null)
+                    service.Configure();
+                Current.MainWindow.Show();
+            });
+        }
     }
 
 }

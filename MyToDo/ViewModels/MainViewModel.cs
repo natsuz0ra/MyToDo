@@ -2,6 +2,7 @@
 using MyToDo.Common;
 using MyToDo.Common.Models;
 using MyToDo.Extensions;
+using MyToDo.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ namespace MyToDo.ViewModels
         public DelegateCommand<MenuBar> NavigateCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand LoginOutCommand { get; private set; }
 
         public MainViewModel(IRegionManager regionManager)
         {
@@ -40,6 +42,15 @@ namespace MyToDo.ViewModels
                 if (_navigationJournal != null && _navigationJournal.CanGoForward)
                     _navigationJournal.GoForward();
             });
+
+            // 注销
+            LoginOutCommand = new DelegateCommand(() =>
+            {
+                if (App.Current is App appInstance)
+                {
+                    appInstance.LoginOut();
+                }
+            });
         }
 
         private ObservableCollection<MenuBar> menuBars;
@@ -48,6 +59,14 @@ namespace MyToDo.ViewModels
         {
             get { return menuBars; }
             set { menuBars = value; RaisePropertyChanged(); }
+        }
+
+        private UserDto user;
+
+        public UserDto User
+        {
+            get { return user; }
+            set { user = value; RaisePropertyChanged(); }
         }
 
         /// <summary>
@@ -82,6 +101,7 @@ namespace MyToDo.ViewModels
         /// </summary>
         public void Configure()
         {
+            User = AppSession.User;
             CreateMenuBar();
             _regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
         }

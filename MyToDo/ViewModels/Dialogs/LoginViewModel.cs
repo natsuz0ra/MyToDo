@@ -94,6 +94,8 @@ namespace MyToDo.ViewModels.Dialogs
                 return;
             }
 
+            AppSession.User = result.Result;
+
             aggregator.SendMessage("登录成功", "Login");
             RequestClose.Invoke(new DialogResult(ButtonResult.OK));
         }
