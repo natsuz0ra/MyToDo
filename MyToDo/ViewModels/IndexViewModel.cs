@@ -216,7 +216,15 @@ namespace MyToDo.ViewModels
             {
                 param.Add("selectedStatus", 2);
             }
-            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(taskBar.Target, param);
+
+            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(taskBar.Target, arg =>
+            {
+                var journal = arg.Context?.NavigationService?.Journal;
+                if (journal != null)
+                {
+                    aggregator.SetNavigationJournal(journal);
+                }
+            }, param);
         }
 
         #endregion

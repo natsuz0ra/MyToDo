@@ -23,7 +23,7 @@ namespace MyToDo.ViewModels
         public DelegateCommand GoForwardCommand { get; private set; }
         public DelegateCommand LoginOutCommand { get; private set; }
 
-        public MainViewModel(IRegionManager regionManager)
+        public MainViewModel(IContainerProvider containerProvider, IRegionManager regionManager)
         {
             MenuBars = new ObservableCollection<MenuBar>();
             _regionManager = regionManager;
@@ -51,6 +51,10 @@ namespace MyToDo.ViewModels
                     appInstance.LoginOut();
                 }
             });
+
+            // 注册事件
+            var aggregator = containerProvider.Resolve<IEventAggregator>();
+            aggregator.RegisterSetNavigationJournal(SetNavigationJournal);
         }
 
         private ObservableCollection<MenuBar> menuBars;
@@ -104,6 +108,16 @@ namespace MyToDo.ViewModels
             User = AppSession.User;
             CreateMenuBar();
             _regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("IndexView");
+        }
+
+        /// <summary>
+        /// 路由对象设置事件监听回调
+        /// </summary>
+        /// <param name="navigationJournal"></param>
+        public void SetNavigationJournal(IRegionNavigationJournal navigationJournal)
+        {
+            if (navigationJournal != null)
+                _navigationJournal = navigationJournal;
         }
     }
 }
